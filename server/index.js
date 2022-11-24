@@ -9,7 +9,6 @@ const LinkRedirectRoutes = require('./routes/linkRedirect');
 
 const app = express();
 
-
 const publicPath = path.join(__dirname, "..", "client/build");
 
 app.use(cors()) // to allow cross origin requests
@@ -23,14 +22,17 @@ MongoMemoryServer.create().then((mongod) => {
 
     mongoose
         .connect(mongod.getUri(), mongooseOpts)
-        .then(() => console.log('MongoDB database Connected...'))
+        .then(() => {
+            console.log('MongoDB database Connected...')
+
+            app.use('/api', LinkShortnerRoutes);
+            app.use('/', LinkRedirectRoutes);
+            app.use(express.static(publicPath));
+            app.get("/", function (req, res) {
+                res.sendFile(path.join(publicPath, "index.html"));
+            });
+            app.listen(process.env.PORT || 7070);
+        })
         .catch((err) => console.log(err));
 });
 
-app.use('/api', LinkShortnerRoutes);
-    app.use('/', LinkRedirectRoutes);
-    app.use(express.static(publicPath));
-    app.get("/", function (req, res) {
-        res.sendFile(path.join(publicPath, "index.html"));
-    });
-    app.listen(process.env.PORT || 7070);
