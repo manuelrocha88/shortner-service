@@ -1,5 +1,4 @@
 const { Router } = require('express');
-const { v4: uuidv4 } = require('uuid');
 const shortid = require('shortid');
 const Link = require('../../models/Link');
 
@@ -16,7 +15,7 @@ router.get('/list', async (req, res) => {
 });
 
 router.post('/encode', async (req, res) => {
-    const newShortLink = new Link({id: uuidv4(), shortId: shortid, ...req.body })
+    const newShortLink = new Link({ shortId: shortid.generate(6), ...req.body })
     try {
         const shortLink = await newShortLink.save();
         if (!shortLink) throw new Error('Something went wrong shortning the link');
@@ -28,7 +27,7 @@ router.post('/encode', async (req, res) => {
 
 router.post('/decode', async (req, res) => {
     try {
-        const link = await Link.find(req.body);
+        const link = await Link.findOne(req.body);
         if (!link) throw new Error('No Link found with this id');
         res.status(200).json(link);
     } catch (error) {
