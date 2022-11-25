@@ -1,26 +1,26 @@
 const { Schema, model } = require('mongoose')
 const { v4: uuidv4 } = require('uuid');
 
-const LinkSchema = new Schema({
+const StatisticsSchema = new Schema({
     id: {
         type: String,
         required: true,
         default: () => uuidv4()
     },
-    shortId: {
+    linkId: {
         type: String,
         required: true,
     },
-    redirectToUrl: {
+    userAgent: {
         type: String,
         required: true,
     },
-    clickCount: {
-        type: Number,
-        required: false,
+    ipAddress: {
+        type: String,
+        required: true,
     },
 })
 
-const Link = model('link', LinkSchema)
+const Statistics = model('statistics', StatisticsSchema)
 
-module.exports = Link
+module.exports = Statistics
