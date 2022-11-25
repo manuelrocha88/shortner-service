@@ -1,25 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+import * as React from 'react';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import CssBaseline from '@mui/material/CssBaseline';
+import Shortner from './components/Shortner';
+import ShortnerListTable from './components/ShortnerListTable';
+import LinkContext from './context/link-context';
 
-function App() {
+export default function App() {
+  const [ lastUpdate, setLastUpdate ] = React.useState(new Date());
+  const updateDateTimeUpdate = () => setLastUpdate(new Date());
+  const contextValue = {lastUpdate, updateDateTimeUpdate};
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Box sx={{ display: 'flex' }}>
+      <CssBaseline />
+      <AppBar component="nav">
+        <Toolbar>
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
+          >
+            Shortner Service
+          </Typography>
+        </Toolbar>
+      </AppBar>
+      <Box component="main" sx={{ p: 3, flexGrow: 1 }}>
+        <LinkContext.Provider value={contextValue}>
+          <Toolbar />
+          <Shortner />
+          <Toolbar />
+          <ShortnerListTable />
+        </LinkContext.Provider>
+      </Box>
+    </Box>
   );
 }
-
-export default App;
