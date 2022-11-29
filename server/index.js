@@ -1,18 +1,9 @@
-const express = require("express");
-const path = require("path");
 const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
-const cors = require('cors');
-const bodyParser = require('body-parser');
-const LinkShortnerRoutes = require('./routes/api/linkShortner');
-const LinkRedirectRoutes = require('./routes/linkRedirect');
+const app = require('./app');
 
-const app = express();
+const port = process.env.PORT || 7070;
 
-const publicPath = path.join(__dirname, "..", "client/build");
-
-app.use(cors()) // to allow cross origin requests
-app.use(bodyParser.json()) // to convert the request into JSON
 
 MongoMemoryServer.create().then((mongod) => {
     const mongooseOpts = {
@@ -25,14 +16,9 @@ MongoMemoryServer.create().then((mongod) => {
         .then(() => {
             console.log('MongoDB database Connected...')
 
-            app.use('/api', LinkShortnerRoutes);
-            app.use('/', LinkRedirectRoutes);
-            app.use(express.static(publicPath));
-            app.get("/", function (req, res) {
-                res.sendFile(path.join(publicPath, "index.html"));
-            });
-            app.listen(process.env.PORT || 7070);
+            app.listen(port, () =>
+                console.log(`Server running on port ${port}, http://localhost:${port}`)
+            );
         })
         .catch((err) => console.log(err));
 });
-

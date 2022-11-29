@@ -8,3 +8,8 @@ In order to run this just do the following:
 This should start all the application. 
 
 Then just go to http://localhost:7070
+
+## To run tests
+
+- cd server
+- npm run test
